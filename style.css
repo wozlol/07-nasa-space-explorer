@@ -11,9 +11,27 @@
 /* Base page styles */
 body {
   font-family: Arial, sans-serif;
-  background-color: #f1f1f1;
   color: #212121;
   padding: 20px;
+}
+
+/* The evening sky. It is the page background itself, so it also fills the gap you see
+   when you pull the page past its end, and it stays put while the page scrolls.
+   Layers are listed top to bottom: the sun's glow, a second warm glow, rose haze,
+   violet clouds, two cool glows high up, and the sky itself from deep blue to violet. */
+html {
+  background-color: #2b3f92; /* shows if the sky below can't draw */
+  background-image:
+    radial-gradient(ellipse 60% 38% at 50% 100%, rgba(255, 176, 104, 0.95) 0%, rgba(255, 128, 112, 0.6) 40%, rgba(255, 128, 112, 0) 100%),
+    radial-gradient(ellipse 42% 34% at 6% 96%, rgba(255, 150, 90, 0.7) 0%, rgba(255, 150, 90, 0) 100%),
+    radial-gradient(ellipse 55% 36% at 94% 90%, rgba(232, 92, 150, 0.75) 0%, rgba(232, 92, 150, 0) 100%),
+    radial-gradient(ellipse 110% 40% at 35% 70%, rgba(124, 76, 190, 0.75) 0%, rgba(124, 76, 190, 0) 100%),
+    radial-gradient(ellipse 55% 42% at 12% 22%, rgba(52, 128, 214, 0.65) 0%, rgba(52, 128, 214, 0) 100%),
+    radial-gradient(ellipse 50% 38% at 90% 18%, rgba(96, 72, 190, 0.55) 0%, rgba(96, 72, 190, 0) 100%),
+    linear-gradient(180deg, #12357c 0%, #1b4190 34%, #3a4496 58%, #5a4698 78%, #7a4a9a 100%);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-attachment: fixed;
 }
 
 /* Stops the page behind the modal from scrolling */
@@ -38,6 +56,7 @@ body.modal-open {
   background: white;
   border-bottom: 4px solid #0b3d91;
   border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(3, 12, 40, 0.5);
 }
 
 h1 {
@@ -59,6 +78,7 @@ h1 {
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
+  box-shadow: 0 8px 22px rgba(3, 12, 40, 0.5);
 }
 
 .space-fact h2 {
@@ -98,7 +118,13 @@ button {
 }
 
 input[type="date"]:focus {
-  outline: 2px solid #0b3d91;
+  outline: 3px solid #02bfe7;
+}
+
+/* Shadows on the date boxes and the main button */
+.filters input[type="date"],
+.filters button {
+  box-shadow: 0 5px 12px rgba(3, 12, 40, 0.5);
 }
 
 /* Button specific */
@@ -147,14 +173,19 @@ button:disabled {
   background: white;
   padding: 10px;
   border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 22px rgba(3, 12, 40, 0.5);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+/* The part of the card that opens the modal: picture, title and date */
+.card-open {
+  flex: 1 1 auto;
   cursor: pointer;
 }
 
-.gallery-item:focus-visible {
+.card-open:focus-visible {
   outline: 3px solid #0b3d91;
 }
 
@@ -182,7 +213,7 @@ button:disabled {
 }
 
 /* LevelUp: smooth zoom when you hover over an image */
-.gallery-item:hover img {
+.card-open:hover img {
   transform: scale(1.1);
 }
 
@@ -228,9 +259,75 @@ button:disabled {
 /* Short note above the gallery when some days did not load */
 .gallery-note {
   flex: 1 1 100%;
+  padding: 10px;
+  border-radius: 6px;
+  background: rgba(6, 31, 74, 0.8);
   text-align: center;
   font-size: 14px;
-  color: #99231b;
+  color: #ffd6cf;
+}
+
+/* A button that looks like a link */
+.text-link {
+  width: auto;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: #0b3d91;
+  font: inherit;
+  font-weight: bold;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.text-link:hover {
+  background: none;
+  text-decoration: none;
+}
+
+.space-fact .text-link {
+  color: #02bfe7;
+}
+
+/* Previous and Next group buttons under the gallery */
+.pager {
+  flex: 1 1 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.pager-button {
+  width: auto;
+  background: white;
+  color: #0b3d91;
+  border: 2px solid #0b3d91;
+  font-weight: bold;
+  box-shadow: 0 5px 12px rgba(3, 12, 40, 0.5);
+}
+
+.pager-button:hover {
+  background: #0b3d91;
+  color: white;
+}
+
+/* Keeps Next on the right even when there is no Previous */
+.pager-button-next {
+  margin-left: auto;
+}
+
+/* On phones each button gets its own row so the text stays on one line */
+@media (max-width: 599px) {
+  .pager {
+    flex-wrap: wrap;
+  }
+
+  .pager-button {
+    flex: 1 1 100%;
+    white-space: nowrap;
+  }
 }
 
 /* Placeholder content */
@@ -238,7 +335,10 @@ button:disabled {
   flex: 1 1 100%;
   text-align: center;
   padding: 40px;
-  color: #666;
+  color: white;
+  background: rgba(6, 31, 74, 0.75);
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(3, 12, 40, 0.5);
 }
 
 .placeholder-icon {
@@ -256,6 +356,7 @@ button:disabled {
   justify-content: center;
   padding: 20px;
   z-index: 1000;
+  overscroll-behavior: contain;
 }
 
 /* Without this, display: flex above would win and the hidden modal would show */
@@ -272,6 +373,21 @@ button:disabled {
   max-width: 900px;
   max-height: 90vh;
   overflow-y: auto;
+  overscroll-behavior: contain; /* scrolling to the end does not move the page behind */
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.6); /* the shadow behind the box */
+}
+
+.modal-content:focus {
+  outline: none;
+}
+
+/* Sticks to the top of the box while it scrolls. It has no height of its own,
+   so the close button floats over the picture. */
+.modal-close-row {
+  position: sticky;
+  top: 0;
+  height: 0;
+  z-index: 2;
 }
 
 .modal-close {
@@ -292,6 +408,74 @@ button:disabled {
 
 .modal-close:hover {
   background: #dd361c;
+}
+
+/* Holds the picture and the side arrows */
+.modal-media-wrap {
+  position: relative;
+}
+
+/* Side arrows. Each one is a tall strip over that side of the picture
+   that fades in when the mouse is over it. */
+.modal-nav {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 15%;
+  min-width: 56px;
+  max-width: 120px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  color: white;
+  font-size: 80px;
+  line-height: 1;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  z-index: 1;
+}
+
+.modal-nav:hover,
+.modal-nav:focus-visible {
+  opacity: 1;
+  background-color: transparent;
+}
+
+.modal-nav-prev {
+  left: 0;
+  justify-content: flex-start;
+  background-image: linear-gradient(to right, rgba(6, 31, 74, 0.6), rgba(6, 31, 74, 0));
+}
+
+.modal-nav-next {
+  right: 0;
+  justify-content: flex-end;
+  background-image: linear-gradient(to left, rgba(6, 31, 74, 0.6), rgba(6, 31, 74, 0));
+}
+
+.modal-nav[hidden] {
+  display: none;
+}
+
+/* Touch screens do not show the arrows. You swipe instead. */
+@media (hover: none), (pointer: coarse) {
+  .modal-nav {
+    display: none;
+  }
+}
+
+/* While the next or previous group loads, the white box hides and the planet shows on top */
+.modal.is-loading .modal-content {
+  visibility: hidden;
+}
+
+/* The modal picture is a link that opens just the image in a new tab */
+.image-link {
+  display: block;
 }
 
 .modal-media img {
@@ -342,12 +526,192 @@ button:disabled {
   color: #5b616b;
 }
 
+/* The big Share button at the bottom of the modal, centered */
+.modal-share {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.share-button {
+  width: auto;
+  min-width: 220px;
+  padding: 14px 48px;
+  border: none;
+  background: #0b3d91;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.35);
+}
+
+.share-button:hover {
+  background: #061f4a;
+}
+
+/* On a computer the picture gives up some height when the text needs it, so most
+   entries fit in the box without scrolling. Only very long text still scrolls. */
+@media (min-width: 900px) {
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    max-height: 94vh;
+  }
+
+  .modal-media-wrap,
+  .modal-media {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+
+  .image-link {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+
+  .modal-media img {
+    flex: 0 1 auto;
+    min-height: 180px;
+  }
+
+  .video-link {
+    flex: 0 0 auto;
+    padding: 16px 20px;
+  }
+
+  .modal-text {
+    flex: 0 0 auto;
+  }
+}
+
+/* Loading modal: a spinning planet in the middle of the screen while photos load */
+.loading-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(6, 31, 74, 0.6);
+}
+
+.loading-modal[hidden] {
+  display: none;
+}
+
+.loading-box {
+  padding: 26px 48px 22px;
+  border-radius: 16px;
+  background: #061f4a;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  text-align: center;
+  color: white;
+}
+
+.loading-box p {
+  margin-top: 4px;
+  font-size: 16px;
+  font-style: italic;
+}
+
+.planet-scene {
+  position: relative;
+  width: 240px;
+  height: 150px;
+  margin: 0 auto;
+}
+
+/* The planet is a circle with a banded surface. Three spots slide across it
+   to look like it is spinning, and two shading layers make it look round. */
+.planet {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 112px;
+  height: 112px;
+  margin: -56px 0 0 -56px;
+  border-radius: 50%;
+  box-shadow: 0 0 28px rgba(255, 170, 110, 0.4);
+  background-image:
+    radial-gradient(circle at 30% 28%, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0) 45%),
+    radial-gradient(circle at 66% 60%, rgba(10, 5, 35, 0) 36%, rgba(10, 5, 35, 0.75) 100%),
+    radial-gradient(ellipse 22px 12px at 70px 38px, #f6dcae 0 68%, rgba(246, 220, 174, 0) 74%),
+    radial-gradient(ellipse 30px 9px at 190px 80px, #9c4a2c 0 68%, rgba(156, 74, 44, 0) 74%),
+    radial-gradient(circle at 130px 60px, #7a3b6e 0 11px, rgba(122, 59, 110, 0) 14px),
+    linear-gradient(180deg, #c98a52 0%, #c98a52 14%, #e3b783 14%, #e3b783 28%, #b86a3d 28%, #b86a3d 42%, #efd2a4 42%, #efd2a4 58%, #a85b34 58%, #a85b34 74%, #dfae7a 74%, #dfae7a 88%, #c98a52 88%);
+  background-size: 100% 100%, 100% 100%, 224px 100%, 224px 100%, 224px 100%, 100% 100%;
+  background-repeat: no-repeat, no-repeat, repeat-x, repeat-x, repeat-x, no-repeat;
+  animation: planet-spin 6s linear infinite;
+}
+
+@keyframes planet-spin {
+  from {
+    background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+  }
+  to {
+    background-position: 0 0, 0 0, -224px 0, -224px 0, -224px 0, 0 0;
+  }
+}
+
+/* The ring is drawn twice. The back one is behind the planet. The front one only shows
+   its lower half, so the ring seems to pass in front of the planet and behind it. */
+.planet-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 232px;
+  height: 60px;
+  margin: -30px 0 0 -116px;
+  border: 8px solid rgba(255, 224, 170, 0.78);
+  border-radius: 50%;
+  transform: rotate(-18deg);
+}
+
+.planet-ring-back {
+  z-index: 1;
+}
+
+.planet-ring-front {
+  z-index: 3;
+  clip-path: inset(50% 0 0 0);
+}
+
+/* A much slower spin for people who ask their device for less motion */
+@media (prefers-reduced-motion: reduce) {
+  .planet {
+    animation-duration: 24s;
+  }
+}
+
+/* Footer */
+.site-footer {
+  margin-top: 30px;
+  padding: 18px 20px;
+  background: #061f4a;
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(3, 12, 40, 0.5);
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #d6e2fb;
+}
+
+.site-footer a {
+  color: #02bfe7;
+  font-weight: bold;
+}
+
 /* Respect people who ask their device for less motion */
 @media (prefers-reduced-motion: reduce) {
   .gallery-item img {
     transition: none;
   }
-  .gallery-item:hover img {
+  .card-open:hover img {
     transform: none;
   }
 }

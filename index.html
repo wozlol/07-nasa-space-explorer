@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- The page already has its own dark colors, so ask browsers and dark mode extensions to leave it alone -->
+  <meta name="color-scheme" content="only light" />
+  <meta name="darkreader-lock" />
   <title>NASA Space Explorer</title>
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
@@ -16,7 +19,7 @@
     <!-- A random space fact, filled in by script.js each time the page loads -->
     <section class="space-fact">
       <h2>🌠 Did You Know?</h2>
-      <p id="spaceFactText"></p>
+      <p><span id="spaceFactText"></span> <button type="button" id="moreFactBtn" class="text-link">Tell me more…</button></p>
     </section>
 
     <div class="filters">
@@ -31,19 +34,44 @@
         <p>Select a date range and click "Get Space Images" to explore the cosmos!</p>
       </div>
     </div>
+
+    <footer class="site-footer">
+      <p>Built by <a href="https://woz.lol" target="_blank" rel="noopener">woz.lol</a>. Photos and data come from <a href="https://www.nasa.gov" target="_blank" rel="noopener">NASA</a>'s Astronomy Picture of the Day.</p>
+    </footer>
   </div>
 
   <!-- Modal window, hidden until a gallery item is clicked -->
   <div id="modal" class="modal" hidden>
-    <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <button id="modalClose" class="modal-close" aria-label="Close">&times;</button>
-      <div id="modalMedia" class="modal-media"></div>
+    <div id="modalContent" class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle" tabindex="-1">
+      <!-- This row stays at the top of the box while the text scrolls, so the close button is always on screen -->
+      <div class="modal-close-row">
+        <button id="modalClose" class="modal-close" aria-label="Close">&times;</button>
+      </div>
+      <div class="modal-media-wrap">
+        <div id="modalMedia" class="modal-media"></div>
+        <!-- Side arrows. They show on hover and are hidden on touch screens, where you swipe instead -->
+        <button id="modalPrev" class="modal-nav modal-nav-prev" aria-label="Previous picture">&#8249;</button>
+        <button id="modalNext" class="modal-nav modal-nav-next" aria-label="Next picture">&#8250;</button>
+      </div>
       <div class="modal-text">
         <h2 id="modalTitle"></h2>
         <p id="modalDate" class="modal-date"></p>
         <p id="modalExplanation"></p>
         <p id="modalCredit" class="modal-credit"></p>
+        <p class="modal-share"><button type="button" id="modalShare" class="share-button">Share…</button></p>
       </div>
+    </div>
+  </div>
+
+  <!-- Spinning planet in the middle of the screen while photos load -->
+  <div id="loadingModal" class="loading-modal" hidden role="status" aria-live="polite">
+    <div class="loading-box">
+      <div class="planet-scene" aria-hidden="true">
+        <div class="planet-ring planet-ring-back"></div>
+        <div class="planet"></div>
+        <div class="planet-ring planet-ring-front"></div>
+      </div>
+      <p>Loading space photos…</p>
     </div>
   </div>
 
