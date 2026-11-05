@@ -53,10 +53,66 @@ body.modal-open {
   padding-top: 20px;
   padding-bottom: 20px;
   margin-bottom: 20px;
-  background: white;
+  position: relative;
+  overflow: hidden; /* keeps the picture and the shine inside the rounded corners */
+  /* Where the shine sits. The script moves these a little when the mouse is over the header. */
+  --sheen-x: 12%;
+  --sheen-y: 0%;
+  /* A very light blue that fades to white, so the glossy shine has something to show on */
+  background: linear-gradient(135deg, #d6e2f6 0%, #f1f5fc 50%, #ffffff 100%);
   border-bottom: 4px solid #0b3d91;
   border-radius: 8px;
   box-shadow: 0 8px 22px rgba(3, 12, 40, 0.5);
+}
+
+/* The faint picture on the right third. The mask fades every edge into the header. */
+.header-art {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 34%;
+  z-index: 0;
+  background: url('img/header-dragon.jpg') 50% 36% / cover no-repeat;
+  filter: brightness(1.35) contrast(0.8) saturate(0.6);
+  opacity: 0.5;
+  pointer-events: none;
+  /* Two fades, one across and one down, laid over each other so all four edges melt into the header */
+  -webkit-mask-image:
+    linear-gradient(to right, transparent 0%, #000 42%, #000 72%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 30%, #000 70%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(to right, transparent 0%, #000 42%, #000 72%, transparent 100%),
+    linear-gradient(to bottom, transparent 0%, #000 30%, #000 70%, transparent 100%);
+  mask-composite: intersect;
+}
+
+/* On a wide header the picture is shown larger so the capsule is easy to see */
+@media (min-width: 700px) {
+  .header-art {
+    background-size: 128% auto;
+  }
+}
+
+/* The glossy shine on the upper left: a soft glow plus a slanted band of light.
+   It sits still until the mouse moves over the header. */
+.site-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(112deg, rgba(255, 255, 255, 0) calc(var(--sheen-x) - 8%), rgba(255, 255, 255, 0.7) calc(var(--sheen-x) + 2%), rgba(255, 255, 255, 0.26) calc(var(--sheen-x) + 12%), rgba(255, 255, 255, 0) calc(var(--sheen-x) + 12.5%), rgba(255, 255, 255, 0) calc(var(--sheen-x) + 16%), rgba(255, 255, 255, 0.42) calc(var(--sheen-x) + 17%), rgba(255, 255, 255, 0.42) calc(var(--sheen-x) + 20%), rgba(255, 255, 255, 0) calc(var(--sheen-x) + 21%)),
+    radial-gradient(ellipse 36% 150% at var(--sheen-x) var(--sheen-y), rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 72%);
+}
+
+/* The logo and title sit above the picture and the shine */
+.site-header .logo,
+.site-header h1 {
+  position: relative;
+  z-index: 2;
 }
 
 h1 {

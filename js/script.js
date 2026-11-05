@@ -643,6 +643,56 @@ modal.addEventListener('touchend', (event) => {
   }
 }, { passive: true });
 
+// ----- Glossy shine on the header -----
+// The shine sits still on the upper left. When the mouse moves over the header it drifts
+// a little toward the mouse, easing along slowly, and it settles back when the mouse leaves.
+const siteHeader = document.querySelector('.site-header');
+const SHEEN_REST = { x: 12, y: 0 }; // where the shine sits, in percent of the header
+const SHEEN_PULL = 0.35; // how much of the way from rest to the mouse the shine travels
+const SHEEN_EASE = 0.08; // how fast it catches up, smaller is lazier
+let sheenNow = { x: SHEEN_REST.x, y: SHEEN_REST.y };
+let sheenGoal = { x: SHEEN_REST.x, y: SHEEN_REST.y };
+let sheenFrame = null;
+
+// Move the shine a small step toward its goal, and keep going until it arrives
+function moveSheen() {
+  sheenNow.x += (sheenGoal.x - sheenNow.x) * SHEEN_EASE;
+  sheenNow.y += (sheenGoal.y - sheenNow.y) * SHEEN_EASE;
+  siteHeader.style.setProperty('--sheen-x', `${sheenNow.x.toFixed(2)}%`);
+  siteHeader.style.setProperty('--sheen-y', `${sheenNow.y.toFixed(2)}%`);
+
+  const isThere = Math.abs(sheenGoal.x - sheenNow.x) < 0.05 && Math.abs(sheenGoal.y - sheenNow.y) < 0.05;
+  sheenFrame = isThere ? null : requestAnimationFrame(moveSheen);
+}
+
+function aimSheen(x, y) {
+  sheenGoal = { x, y };
+  if (sheenFrame === null) {
+    sheenFrame = requestAnimationFrame(moveSheen);
+  }
+}
+
+// Skip all of this for people who ask their device for less motion
+if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  siteHeader.addEventListener('pointermove', (event) => {
+    if (event.pointerType === 'touch') {
+      return; // a finger has no hover, so the shine stays put
+    }
+
+    const box = siteHeader.getBoundingClientRect();
+    const mouseX = ((event.clientX - box.left) / box.width) * 100;
+    const mouseY = ((event.clientY - box.top) / box.height) * 100;
+    aimSheen(
+      SHEEN_REST.x + (mouseX - SHEEN_REST.x) * SHEEN_PULL,
+      SHEEN_REST.y + (mouseY - SHEEN_REST.y) * SHEEN_PULL
+    );
+  });
+
+  siteHeader.addEventListener('pointerleave', () => {
+    aimSheen(SHEEN_REST.x, SHEEN_REST.y);
+  });
+}
+
 // ----- Start up -----
 
 // Load a group as soon as the page opens.
