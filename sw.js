@@ -4,7 +4,7 @@
 // 2. Keep a copy of NASA's answers, so photos you already looked at still show offline.
 //
 // When you change any app file, change VERSION too. That makes phones fetch the new files.
-const VERSION = 'v3';
+const VERSION = 'v5';
 const SHELL_CACHE = `space-explorer-shell-${VERSION}`;
 const API_CACHE = `space-explorer-api-${VERSION}`;
 const IMAGE_CACHE = `space-explorer-images-${VERSION}`;

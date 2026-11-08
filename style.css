@@ -161,9 +161,11 @@ h1 {
 }
 
 /* Date‐picker & button row */
+/* On a phone this is a single column that is exactly as wide as the row, so the date boxes and the
+   button are forced to the same width (iPhone Chrome and Safari otherwise size the date boxes themselves) */
 .filters {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   justify-content: center;
   margin-bottom: 20px;
@@ -182,6 +184,20 @@ button {
   font-size: 16px;
   line-height: 1.4;
   width: 100%;
+}
+
+/* iPhone Safari gives date boxes a fixed width of their own, which made them hang over the right edge.
+   Taking away the native look and allowing them to shrink keeps them inside the row. */
+input[type="date"] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 44px;
+  text-align: left;
+  background-color: white;
 }
 
 input[type="date"]:focus {
@@ -213,6 +229,7 @@ button:disabled {
 /* Stack horizontally on wider screens */
 @media (min-width: 600px) {
   .filters {
+    display: flex;
     flex-direction: row;
     padding: 0;
   }
