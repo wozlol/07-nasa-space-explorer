@@ -12,6 +12,14 @@
   <link rel="icon" type="image/png" href="img/favicon.png" />
   <link rel="apple-touch-icon" href="img/favicon.png" />
 
+  <!-- Makes the site installable. The manifest names the app, its icons and how it opens (standalone, no browser bar) -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#12357c" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Space Explorer" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="NASA Space Explorer" />
   <meta property="og:url" content="https://wozlol.github.io/07-nasa-space-explorer/" />
@@ -32,6 +40,11 @@
   <link href="style.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
+  <!-- Shown by pwa.js while the device has no internet -->
+  <div id="offlineBanner" class="offline-banner" role="status" hidden>
+    📡 You are offline. Showing photos you already loaded.
+  </div>
+
   <div class="container">
     <header class="site-header">
       <!-- Faint picture on the right third. SpaceX Dragon approaching the International Space Station, NASA photo iss073e0505071, public domain -->
@@ -52,6 +65,12 @@
       <button id="getImagesBtn">Get Space Images</button>
     </div>
 
+    <!-- Notification permission. pwa.js asks only when this button is tapped -->
+    <div class="notify-row">
+      <button type="button" id="notifyBtn" class="notify-button" hidden>🔔 Turn On Notifications</button>
+      <p id="notifyStatus" class="notify-status"></p>
+    </div>
+
     <div id="gallery" class="gallery">
       <div class="placeholder">
         <div class="placeholder-icon">🔭</div>
@@ -60,6 +79,11 @@
     </div>
 
     <footer class="site-footer">
+      <!-- Quiet install note, filled in by pwa.js. It stays here after the floating banner is dismissed -->
+      <div id="footerInstall" class="footer-install" hidden>
+        <p id="footerInstallText"></p>
+        <button type="button" id="footerInstallBtn" class="footer-install-button">Install App</button>
+      </div>
       <p>Built by <a href="https://woz.lol" target="_blank" rel="noopener">woz.lol</a>. Photos and data come from <a href="https://www.nasa.gov" target="_blank" rel="noopener">NASA</a>'s Astronomy Picture of the Day.</p>
     </footer>
   </div>
@@ -99,7 +123,18 @@
     </div>
   </div>
 
+  <!-- Our own install banner, shown by pwa.js instead of the browser's default one -->
+  <div id="installBanner" class="install-banner" role="dialog" aria-label="Install this app" hidden>
+    <img src="img/icon-192.png" alt="" class="install-icon" />
+    <p id="installText" class="install-text"></p>
+    <div class="install-actions">
+      <button type="button" id="installBtn" class="install-button">Install</button>
+      <button type="button" id="installDismiss" class="install-dismiss">Not Now</button>
+    </div>
+  </div>
+
   <script src="js/dateRange.js"></script>
   <script src="js/script.js"></script>
+  <script src="js/pwa.js"></script>
 </body>
 </html>
